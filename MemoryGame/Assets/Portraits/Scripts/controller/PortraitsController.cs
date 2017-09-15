@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Portraits
 {
-	public struct CustomPair //TODO: Move to a better place
+	public struct CustomPair 
 	{
 		public int Key;
 		public Vector2 Value;

@@ -92,7 +92,7 @@ namespace Portraits
 			_portraitsController = transform.GetComponent<PortraitsController>();
 
 			//Data
-			_currentLevel = _playerModel.Level-1;
+			_currentLevel = _playerModel.Level;
 			_currentLevelData = _gameModel.GetLevel(_currentLevel);
 			_currentGameMode = _playerModel.ActivePlayMode;
 

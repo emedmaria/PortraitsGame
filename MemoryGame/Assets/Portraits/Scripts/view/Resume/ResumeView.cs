@@ -132,7 +132,8 @@ namespace Portraits
 		}
 		private void ShowSuccessDialog(bool lastLvl)
 		{
-			//_stillBg.SetActive(true)
+            //_stillBg.SetActive(false);
+
 			_resumePanel.gameObject.SetActive(true);
 			_headlineTx.text = LEVEL_TX + SPACE + (_gManager.CurrentLevel + 1);
 			_scoreTx.text = _pController.CurrentScore + SLASH + _pController.MaxScore;
@@ -154,7 +155,8 @@ namespace Portraits
 			_animationTriggered = true;
 			SoundManager.instance.PlaySFXById(SoundManager.SFX_SUCCESS); //TODO: Sync sound better with the animation
 			_resumePanel.gameObject.SetActive(false);
-			_animBg.SetActive(true);
+            _stillBg.SetActive(false);
+            _animBg.SetActive(true);
 			_animator.SetTrigger(ANIM_TRIGGER_ID);
 		}
 

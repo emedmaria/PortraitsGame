@@ -24,16 +24,16 @@ namespace Portraits
 		private Transform _pTransform;
 		private Transform _gTransform;
 
-		//Instances to portraitPrefabs
-		private GameObject[,] _portraitsGO;
+		//Instances to portraitPrefabs and cached script Component to frequently accessed
+		private GameObject[,] _portraitsGO;         //TODO: Replace multidimensional array by jagged vect -> faster access
+        private PortraitFrame[,] _portraitsFrame;  //TODO: Replace multidimensional array by jagged vect -> faster access
 
-		//Reference to GamePlayController
-		private PortraitsController _gpController = null;
+        //Reference to GamePlayController
+        private PortraitsController _gpController = null;
 
 		//Values to display
 		private int _waitingTs;
 		private int _countDownTs;
-
 
 		//Current gamePlay state
 		private PortraitsController.GPState _currentState; 
@@ -47,38 +47,37 @@ namespace Portraits
 			_gpController = PortraitsController.Instance;
 			_currentState = _gpController.CurrentState;
 
+            VisibleHolder(false);
 			//Suscribe to PortraitsController events
 			SuscriptionsActive(true);
 		}
 
 		void OnDisable()
-		{
-			SuscriptionsActive(false);
-			//Unsuscribe
+        {   //Unsuscribe
+            SuscriptionsActive(false);
 		}
 
 		void OnDestroy()
 		{
-			int sizeX = _portraitsGO.GetUpperBound(0) + 1;
-			int sizeY = _portraitsGO.GetUpperBound(1) + 1;
+            int sizeX = _portraitsFrame.GetUpperBound(0) + 1;
+            int sizeY = _portraitsFrame.GetUpperBound(1) + 1;
 
-			for (int i = 0; i < sizeX; i++)
-			{
-				for (int j = 0; j < sizeY; j++)
-				{
-					GameObject currentFrame = _portraitsGO[i, j];
-					if (currentFrame != null)
-					{
-						PortraitFrame sc = currentFrame.GetComponent<PortraitFrame>();
-						//Unsuscribe
-						sc.OnSelection -= HandleFrameSelected;
-						sc.DestroyG0();
-					}
-				}
-			}
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    PortraitFrame pf = _portraitsFrame[i, j];
+                    if (pf != null)
+                    {
+                        //Unsuscribe
+                        pf.OnSelection -= HandleFrameSelected;
+                        pf.DestroyG0();
+                    }
+                }
+            }
 
-			//Unsuscribe to portraitsController events
-			SuscriptionsActive(false);
+            //Unsuscribe to portraitsController events
+            SuscriptionsActive(false);
 		}
 		#endregion
 
@@ -98,9 +97,8 @@ namespace Portraits
 			SuscriptionsActive(true);
 
 			if (!enabled)
-			{
 				gameObject.SetActive(true);
-			}
+		
 		}
 		private void SuscriptionsActive(bool suscribe)
 		{
@@ -140,8 +138,9 @@ namespace Portraits
 			float startY = _gTransform.localPosition.y;
 
 			_portraitsGO = new GameObject[sizeX, sizeY];
+            _portraitsFrame = new PortraitFrame[sizeX, sizeY];
 
-			for (int i = 0; i < sizeX; i++)
+            for (int i = 0; i < sizeX; i++)
 			{
 				for (int j = 0; j < sizeY; j++)
 				{
@@ -159,7 +158,8 @@ namespace Portraits
 					pf.OnSelection += HandleFrameSelected;
 
 					_portraitsGO[i, j] = portraitGO;
-				}
+					_portraitsFrame[i, j] = pf;
+                }
 			}
 			//Reposition the holder after populate it
 			//TODO: Get Ranges fromLEvel
@@ -168,29 +168,23 @@ namespace Portraits
 			
 		}
 
-		private void CharactersVisibility(bool visible)
-		{
-			int sizeX = _portraitsGO.GetUpperBound(0) + 1;
-			int sizeY = _portraitsGO.GetUpperBound(1) + 1;
+        private void CharactersVisibility(bool visible)
+        {
+            int sizeX = _portraitsFrame.GetUpperBound(0) + 1;
+            int sizeY = _portraitsFrame.GetUpperBound(1) + 1;
 
-			PortraitFrame sc;
-			for (int i = 0; i < sizeX; i++)
-			{
-				for (int j = 0; j < sizeY; j++)
-				{
-					GameObject currentFrame = _portraitsGO[i, j];
-					sc = currentFrame.GetComponent<PortraitFrame>();
-					sc.ShowSolution(visible);
-				}
-			}
-		}
+            PortraitFrame sc;
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                {
+                    sc = _portraitsFrame[i, j];
+                    sc.ShowSolution(visible);
+                }
+            }
+        }
 
-		public void Enable(bool value)
-		{
-			_pTransform.gameObject.SetActive(value);
-		}
-
-		private void EnableGrid(bool value)
+        private void EnableGrid(bool value)
 		{
 			int sizeX = _portraitsGO.GetUpperBound(0) + 1;
 			int sizeY = _portraitsGO.GetUpperBound(1) + 1;
@@ -214,9 +208,11 @@ namespace Portraits
 		}
 
 		#endregion
-
+        private void VisibleHolder(bool value)
+        {
+            _gTransform.gameObject.SetActive(value);
+        }
 		#region Suscriptions handlers
-
 		/// <summary>
 		/// Dispatch selection to the PortraitsController - 
 		/// </summary>
@@ -236,23 +232,22 @@ namespace Portraits
 			switch (_currentState)
 			{
 				case PortraitsController.GPState.CoolDown:
-					_gTransform.gameObject.SetActive(true);
-					CharactersVisibility(true);
+                    VisibleHolder(true);
+                    CharactersVisibility(true);
 					EnableGrid(false);
 					break;
 				case PortraitsController.GPState.Playing:
-					_gTransform.gameObject.SetActive(true);
-					CharactersVisibility(false);
+                    VisibleHolder(true);
+                    CharactersVisibility(false);
 					EnableGrid(true);
 					break;
 				case PortraitsController.GPState.OutOfTime:
 					EnableGrid(false);
-					//HandleSuccess();
 					StartCoroutine(DoVanish());
 					break;
 				case PortraitsController.GPState.Success:
-					_gTransform.gameObject.SetActive(false);
-					EnableGrid(false);
+                    VisibleHolder(false);
+                    EnableGrid(false);
 					StartCoroutine(DoVanish());
 					break;
 			}
@@ -267,23 +262,23 @@ namespace Portraits
 		/// <param name="isMatch"></param>
 		private void HandlePairSelected(CustomPair selection1, CustomPair selection2, bool isMatch)
 		{
-			PortraitFrame pf;
-			//Portraits vanish
-			if (isMatch)
-			{
-				pf = _portraitsGO[(int)selection1.Value.x, (int)selection1.Value.y].GetComponent<PortraitFrame>();
-				StartCoroutine(pf.DoVanish());
-				pf = _portraitsGO[(int)selection2.Value.x, (int)selection2.Value.y].GetComponent<PortraitFrame>();
-				StartCoroutine( pf.DoVanish());
-			}
-			else //Hide Character
-			{
-				pf = _portraitsGO[(int)selection1.Value.x, (int)selection1.Value.y].GetComponent<PortraitFrame>();
-				StartCoroutine(pf.DoFlip(true));
-				pf = _portraitsGO[(int)selection2.Value.x, (int)selection2.Value.y].GetComponent<PortraitFrame>();
-				StartCoroutine(pf.DoFlip(true));
-			}
-		}
+            PortraitFrame pf;
+            //Portraits vanish
+            if (isMatch)
+            {
+                pf = _portraitsFrame[(int)selection1.Value.x, (int)selection1.Value.y];
+                StartCoroutine(pf.DoVanish());
+                pf = _portraitsFrame[(int)selection2.Value.x, (int)selection2.Value.y];
+                StartCoroutine(pf.DoVanish());
+            }
+            else //Hide Character
+            {
+                pf = _portraitsFrame[(int)selection1.Value.x, (int)selection1.Value.y];
+                StartCoroutine(pf.DoFlip(true));
+                pf = _portraitsFrame[(int)selection2.Value.x, (int)selection2.Value.y];
+                StartCoroutine(pf.DoFlip(true));
+            }
+        }
 		#endregion
 	}
 }
