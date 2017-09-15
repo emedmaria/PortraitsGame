@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1826789894393066}
+  m_IsPrefabParent: 1
+--- !u!1 &1826789894393066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4552996869947742}
+  - component: {fileID: 114361891106061636}
+  m_Layer: 0
+  m_Name: PortraitsView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4552996869947742
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1826789894393066}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114361891106061636
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1826789894393066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78f3fd6c12c3e4b4b96bde60b136d28c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _charactersGO:
+  - {fileID: 1430306826475212, guid: 06fd29cb62698de46a679a878a1fca5b, type: 2}
+  - {fileID: 1876326948355680, guid: 1ae5c5b8f90295d4b92c3587373518d8, type: 2}
+  - {fileID: 1499510805505378, guid: 8fdf0e8304b0b2f4697d581c53e4e51b, type: 2}
+  - {fileID: 1416533152044012, guid: 006ad61f17496874e97f2b0c0f611d0a, type: 2}
+  - {fileID: 1839607891178322, guid: d66e8d348a7eaa848a13e656b7860c11, type: 2}
+  - {fileID: 1629927806648660, guid: a85c31aae6e79884ab19362772e5df30, type: 2}
+  - {fileID: 1725633953102242, guid: 7d0f15230c9fab44286393ccd55d4a58, type: 2}
+  - {fileID: 1408254970163316, guid: be6de79980a6a854a8029d66d86a4724, type: 2}
+  - {fileID: 1844195781114854, guid: cd2faab06242e2c48906fefd38ff2cb1, type: 2}
+  - {fileID: 1054506673358190, guid: f630b18acbceeb14fa3706d0d392c50d, type: 2}

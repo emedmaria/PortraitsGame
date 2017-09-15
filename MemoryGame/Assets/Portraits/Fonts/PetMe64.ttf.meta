@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: a558bd979c7fb7641bf3940a39e7322f
+timeCreated: 1504973370
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Pet Me 64
+  fontNames:
+  - Pet Me 64
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
